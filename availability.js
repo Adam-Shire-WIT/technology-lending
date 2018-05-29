@@ -61,7 +61,7 @@ app.post('/available', function (req, res) {
           console.log('Error in execution of select statement'+err.message);
           res.status(500).send(err.message)
         } else {
-        console.log('db response is ready '+result.rows);
+      
 
         res.json(result.rows);
       }
