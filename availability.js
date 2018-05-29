@@ -1,8 +1,5 @@
-// var http = require('http');
-var fs = require('fs')
 var oracledb = require('oracledb');
 var dbConfig = require('./dbconfig.js');
-//var bodyParser = require('body-parser')
 var express = require('express');
 var app = express();
 
@@ -19,11 +16,6 @@ console.log('Server running, Express is listening...');
 
 
 
-//app.get('/', function(req, res){
-//    var html = fs.readFileSync('index.html');
-  //  res.header("Content-Type", "text/html");
-    //res.send(html);
-// });
 
 
 app.post('/available', function (req, res) {
@@ -61,7 +53,7 @@ app.post('/available', function (req, res) {
           console.log('Error in execution of select statement'+err.message);
           res.status(500).send(err.message)
         } else {
-      
+
 
         res.json(result.rows);
       }
