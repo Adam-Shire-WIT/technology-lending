@@ -1,4 +1,5 @@
 const express = require('express');
+const results = require('./voyager');
 
 const app = express();
 
@@ -19,7 +20,7 @@ const db = {
 
   //GET All
   app.get('/', (req, res, next) => {
-
+    console.log(results)
     res.json(db);
   });
 
