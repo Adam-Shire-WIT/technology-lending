@@ -6,11 +6,6 @@ return $(this).attr("mfhd_id")
 .get();
 
 
-//var elementIDs = $("div.availability")         // find DIVs with item class
-//.map(function() {
-//console.log($(this).attr()}).get();
-//  return this.attr("mfhd_id"); }) // convert to set of IDs
-//.get(); // convert to instance of Array (optional)
 
 console.log("element IDs: " + elementIDs)
 
