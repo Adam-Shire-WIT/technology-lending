@@ -1,6 +1,16 @@
-var elementIDs = $(".mfhd")         // find DIVs with item class
-.map(function() { return this.id; }) // convert to set of IDs
-.get(); // convert to instance of Array (optional)
+
+var elementIDs = $("div.availability")
+.map(function(){
+return $(this).attr("mfhd_id")
+})
+.get();
+
+
+//var elementIDs = $("div.availability")         // find DIVs with item class
+//.map(function() {
+//console.log($(this).attr()}).get();
+//  return this.attr("mfhd_id"); }) // convert to set of IDs
+//.get(); // convert to instance of Array (optional)
 
 console.log("element IDs: " + elementIDs)
 
@@ -11,7 +21,7 @@ $.post('/mfhd', {mfhdIDs: elementIDs})
       console.log(item)
 
     var status = item.STATUS == 1 ? "Checked Out" : "Available";
-    $("#" + item.MFHD_ID).append(`<li>itemID: ${item.ITEM_ID} : status ${status}</li>`)
+    $("[mfhd_id='2965423']").append(`<li>itemID: ${item.ITEM_ID} : status ${status}</li>`)
   });
   }).fail(function() {
     alert ("error")
