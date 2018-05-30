@@ -18,5 +18,9 @@
   },
   "homepage": "https://github.com/Adam-Shire-WIT/technology-lending#readme",
   "dependencies": {
-    "express": "^4.16.3"      }
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "oracledb": "^2.2.0"
+  }
 }

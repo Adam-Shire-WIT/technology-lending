@@ -4,7 +4,7 @@ var elementIDs = $("div.item")         // find DIVs with item class
 
 console.log(elementIDs)
 
-$.post('https://stormy-sands-31661.herokuapp.com/available', {itemIDs: elementIDs})
+$.post('/available', {itemIDs: elementIDs})
 .done(function(data) {
     $.each(data, function (index, item) {
     var status = item.STATUS = 1 ? "Checked Out" : "Available";
