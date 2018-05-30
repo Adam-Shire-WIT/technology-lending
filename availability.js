@@ -11,7 +11,7 @@ app.use(express.static('public'))
 var PORT = process.env.PORT || 8089;
 
 app.listen(PORT, function () {
-console.log('Server running, Express is listening...');
+console.log(`Server running, Express is listening on port ${PORT}...`);
 });
 
 
