@@ -1,9 +1,10 @@
 var oracledb = require('oracledb');
 var dbConfig = require('./dbconfig.js');
+var cors = require('cors')
 var express = require('express');
 var app = express();
 
-
+app.use(cors());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'))
 
