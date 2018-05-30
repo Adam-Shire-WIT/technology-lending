@@ -44,7 +44,7 @@ app.post('/available', function (req, res) {
       return;
     }
      console.log('connection successful')
-     console.log(`executing ${selectStatement}`)
+     //console.log(`executing ${selectStatement}`)
     connection.execute(selectStatement,
        {},
        {outFormat: oracledb.OBJECT},  // Return the result as Object
@@ -91,7 +91,7 @@ app.get('/available/:id', function (req, res) {
       return;
     }
      console.log('connection successful')
-     console.log(`executing ${selectStatement}`)
+     //console.log(`executing ${selectStatement}`)
     connection.execute(selectStatement,
        {},
        {outFormat: oracledb.OBJECT},  // Return the result as Object
@@ -100,7 +100,7 @@ app.get('/available/:id', function (req, res) {
           console.log('Error in execution of select statement'+err.message);
           res.status(500).send(err.message)
         } else {
-        console.log('db response is ready '+result.rows);
+        //console.log('db response is ready '+result.rows);
 
         res.json(result.rows);
       }
