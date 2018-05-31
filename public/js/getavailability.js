@@ -16,7 +16,7 @@ $.post('/mfhd', {mfhdIDs: elementIDs})
       console.log(item)
 
     var status = item.STATUS == 1 ? "Checked Out" : "Available";
-    $("[mfhd_id='2965423']").append(`<li>itemID: ${item.ITEM_ID} : status ${status}</li>`)
+    $('[mfhd_id="'+item.MFHD_ID+'"]').append(`<li>itemID: ${index} : status ${status}</li>`)
   });
   }).fail(function() {
     alert ("error")
