@@ -19,100 +19,105 @@ console.log(`Server running, Express is listening on port ${PORT}...`);
 
 
 
-
-app.post('/available', function (req, res) {
+//return count items that are currently charged out
+app.post('/item', function (req, res) {
 
   var itemIDs = req.body.itemIDs;
 
 
-  var selectStatement = `SELECT ITEM_ID AS ITEMID, COUNT(CIRC_TRANSACTION_ID) AS STATUS
+  var sql = `SELECT ITEM_ID AS ITEMID, COUNT(CIRC_TRANSACTION_ID) AS STATUS
                         FROM CIRC_TRANSACTIONS
                         WHERE CIRC_TRANSACTIONS.ITEM_ID IN (${itemIDs})
                         GROUP BY ITEM_ID`;
 
-//setup database connection
-  oracledb.getConnection(
-  {
-    user          : dbConfig.user,
-    password      : dbConfig.password,
-    connectString : dbConfig.connectString
-  },
-  function(err, connection) {
-    if (err) {
-      console.log('Error in acquiring connection ...');
-      console.log('Error message '+err.message);
-      res.status(500).send(err.message)
-      doRelease(connection);
-      return;
-    }
-     console.log('connection successful')
-     //console.log(`executing ${selectStatement}`)
-    connection.execute(selectStatement,
-       {},
-       {outFormat: oracledb.OBJECT},  // Return the result as Object
-       function (err, result) {
-        if (err) {
-          console.log('Error in execution of select statement'+err.message);
-          res.status(500).send(err.message)
-        } else {
+  getResults(req, res, sql);
 
-
-        res.json(result.rows);
-      }
-      doRelease(connection);
-    });
-
-
-  });
+// //setup database connection
+//   oracledb.getConnection(
+//   {
+//     user          : dbConfig.user,
+//     password      : dbConfig.password,
+//     connectString : dbConfig.connectString
+//   },
+//   function(err, connection) {
+//     if (err) {
+//       console.log('Error in acquiring connection ...');
+//       console.log('Error message '+err.message);
+//       res.status(500).send(err.message)
+//       doRelease(connection);
+//       return;
+//     }
+//      console.log('connection successful')
+//      //console.log(`executing ${selectStatement}`)
+//     connection.execute(sql,
+//        {},
+//        {outFormat: oracledb.OBJECT},  // Return the result as Object
+//        function (err, result) {
+//         if (err) {
+//           console.log('Error in execution of select statement'+err.message);
+//           res.status(500).send(err.message)
+//         } else {
+//
+//
+//         res.json(result.rows);
+//       }
+//       doRelease(connection);
+//     });
+//
+//
+//   });
 
 
 });
 
+//return all items from all MFHDs in req.body.mfhdIDs
 app.post('/mfhd', function (req, res) {
 
   var mfhdIDs = req.body.mfhdIDs;
 
 
-  var selectStatement = `SELECT MFHD_MASTER.MFHD_ID, MFHD_ITEM.ITEM_ID, Count(CIRC_TRANSACTIONS.CIRC_TRANSACTION_ID) AS STATUS
+  var sql = `SELECT MFHD_MASTER.MFHD_ID, MFHD_ITEM.ITEM_ID, Count(CIRC_TRANSACTIONS.CIRC_TRANSACTION_ID) AS STATUS
 FROM (MFHD_ITEM INNER JOIN MFHD_MASTER ON MFHD_ITEM.MFHD_ID = MFHD_MASTER.MFHD_ID) LEFT JOIN CIRC_TRANSACTIONS ON MFHD_ITEM.ITEM_ID = CIRC_TRANSACTIONS.ITEM_ID
 WHERE (((MFHD_MASTER.MFHD_ID) In (${mfhdIDs})))
 GROUP BY MFHD_MASTER.MFHD_ID, MFHD_ITEM.ITEM_ID`;
 
-//setup database connection
-  oracledb.getConnection(
-  {
-    user          : dbConfig.user,
-    password      : dbConfig.password,
-    connectString : dbConfig.connectString
-  },
-  function(err, connection) {
-    if (err) {
-      console.log('Error in acquiring connection ...');
-      console.log('Error message '+err.message);
-      res.status(500).send(err.message)
-      doRelease(connection);
-      return;
-    }
-     console.log('connection successful')
-     //console.log(`executing ${selectStatement}`)
-    connection.execute(selectStatement,
-       {},
-       {outFormat: oracledb.OBJECT},  // Return the result as Object
-       function (err, result) {
-        if (err) {
-          console.log('Error in execution of select statement'+err.message);
-          res.status(500).send(err.message)
-        } else {
+getResults(req, res, sql);
 
-
-        res.json(result.rows);
-      }
-      doRelease(connection);
-    });
-
-
-  });
-
+// //setup database connection
+//   oracledb.getConnection(
+//   {
+//     user          : dbConfig.user,
+//     password      : dbConfig.password,
+//     connectString : dbConfig.connectString
+//   },
+//   function(err, connection) {
+//     if (err) {
+//       console.log('Error in acquiring connection ...');
+//       console.log('Error message '+err.message);
+//       res.status(500).send(err.message)
+//       doRelease(connection);
+//       return;
+//     }
+//      console.log('connection successful')
+//      //console.log(`executing ${selectStatement}`)
+//     connection.execute(sql,
+//        {},
+//        {outFormat: oracledb.OBJECT},  // Return the result as Object
+//        function (err, result) {
+//         if (err) {
+//           console.log('Error in execution of select statement'+err.message);
+//           res.status(500).send(err.message)
+//         } else {
+//
+//
+//         res.json(result.rows);
+//       }
+//       doRelease(connection);
+//     });
+//
+//
+//   });
+//
 
 });
 
@@ -121,93 +126,96 @@ app.get('/mfhd/:id', function (req, res) {
   var mfhdID = req.params.id;
 
 
-  var selectStatement = `SELECT MFHD_MASTER.MFHD_ID, MFHD_ITEM.ITEM_ID, Count(CIRC_TRANSACTIONS.CIRC_TRANSACTION_ID) AS STATUS
+  var sql = `SELECT MFHD_MASTER.MFHD_ID, MFHD_ITEM.ITEM_ID, Count(CIRC_TRANSACTIONS.CIRC_TRANSACTION_ID) AS STATUS
 FROM (MFHD_ITEM INNER JOIN MFHD_MASTER ON MFHD_ITEM.MFHD_ID = MFHD_MASTER.MFHD_ID) LEFT JOIN CIRC_TRANSACTIONS ON MFHD_ITEM.ITEM_ID = CIRC_TRANSACTIONS.ITEM_ID
 WHERE MFHD_MASTER.MFHD_ID = ${mfhdID}
 GROUP BY MFHD_MASTER.MFHD_ID, MFHD_ITEM.ITEM_ID`;
 
+getResults(req, res, sql);
 //setup database connection
-  oracledb.getConnection(
-  {
-    user          : dbConfig.user,
-    password      : dbConfig.password,
-    connectString : dbConfig.connectString
-  },
-  function(err, connection) {
-    if (err) {
-      console.log('Error in acquiring connection ...');
-      console.log('Error message '+err.message);
-      res.status(500).send(err.message)
-      doRelease(connection);
-      return;
-    }
-     console.log('connection successful')
-     //console.log(`executing ${selectStatement}`)
-    connection.execute(selectStatement,
-       {},
-       {outFormat: oracledb.OBJECT},  // Return the result as Object
-       function (err, result) {
-        if (err) {
-          console.log('Error in execution of select statement'+err.message);
-          res.status(500).send(err.message)
-        } else {
-
-
-        res.json(result.rows);
-      }
-      doRelease(connection);
-    });
-
-
-  });
-
-
+//   oracledb.getConnection(
+//   {
+//     user          : dbConfig.user,
+//     password      : dbConfig.password,
+//     connectString : dbConfig.connectString
+//   },
+//   function(err, connection) {
+//     if (err) {
+//       console.log('Error in acquiring connection ...');
+//       console.log('Error message '+err.message);
+//       res.status(500).send(err.message)
+//       doRelease(connection);
+//       return;
+//     }
+//      console.log('connection successful')
+//      //console.log(`executing ${selectStatement}`)
+//     connection.execute(sql,
+//        {},
+//        {outFormat: oracledb.OBJECT},  // Return the result as Object
+//        function (err, result) {
+//         if (err) {
+//           console.log('Error in execution of select statement'+err.message);
+//           res.status(500).send(err.message)
+//         } else {
+//
+//
+//         res.json(result.rows);
+//       }
+//       doRelease(connection);
+//     });
+//
+//
+//   });
+//
+//
 });
 
 
 
-app.get('/available/:id', function (req, res) {
+app.get('/item/:id', function (req, res) {
 
   var itemID = req.params.id;
 
-  var selectStatement = `SELECT COUNT(CIRC_TRANSACTION_ID) AS status
+  var sql = `SELECT COUNT(CIRC_TRANSACTION_ID) AS status
                         FROM CIRC_TRANSACTIONS
                         WHERE CIRC_TRANSACTIONS.ITEM_ID =` + itemID;
 
+  getResults(req, res, sql);
+
 //setup database connection
-  oracledb.getConnection(
-  {
-    user          : dbConfig.user,
-    password      : dbConfig.password,
-    connectString : dbConfig.connectString
-  },
-  function(err, connection) {
-    if (err) {
-      console.log('Error in acquiring connection ...');
-      console.log('Error message '+err.message);
-      res.status(500).send(err.message)
-      doRelease(connection);
-      return;
-    }
-     console.log('connection successful')
-     //console.log(`executing ${selectStatement}`)
-    connection.execute(selectStatement,
-       {},
-       {outFormat: oracledb.OBJECT},  // Return the result as Object
-       function (err, result) {
-        if (err) {
-          console.log('Error in execution of select statement'+err.message);
-          res.status(500).send(err.message)
-        } else {
-        //console.log('db response is ready '+result.rows);
-
-        res.json(result.rows);
-      }
-      doRelease(connection);
-    });
-
-
-  });
+  // oracledb.getConnection(
+  // {
+  //   user          : dbConfig.user,
+  //   password      : dbConfig.password,
+  //   connectString : dbConfig.connectString
+  // },
+  // function(err, connection) {
+  //   if (err) {
+  //     console.log('Error in acquiring connection ...');
+  //     console.log('Error message '+err.message);
+  //     res.status(500).send(err.message)
+  //     doRelease(connection);
+  //     return;
+  //   }
+  //    console.log('connection successful')
+  //    //console.log(`executing ${selectStatement}`)
+  //   connection.execute(sql,
+  //      {},
+  //      {outFormat: oracledb.OBJECT},  // Return the result as Object
+  //      function (err, result) {
+  //       if (err) {
+  //         console.log('Error in execution of select statement'+err.message);
+  //         res.status(500).send(err.message)
+  //       } else {
+  //       //console.log('db response is ready '+result.rows);
+  //
+  //       res.json(result.rows);
+  //     }
+  //     doRelease(connection);
+  //   });
+  //
+  //
+  // });
 
 
 });
@@ -222,3 +230,43 @@ function doRelease(connection) {
     }
   });
 }
+
+function getResults(req, res, sql) {
+
+  //setup database connection
+    oracledb.getConnection(
+    {
+      user          : dbConfig.user,
+      password      : dbConfig.password,
+      connectString : dbConfig.connectString
+    },
+    function(err, connection) {
+      if (err) {
+        console.log('Error in acquiring connection ...');
+        console.log('Error message '+err.message);
+        res.status(500).send(err.message)
+        doRelease(connection);
+        return;
+      }
+       console.log('connection successful')
+       //console.log(`executing ${selectStatement}`)
+      connection.execute(sql,
+         {},
+         {outFormat: oracledb.OBJECT},  // Return the result as Object
+         function (err, result) {
+          if (err) {
+            console.log('Error in execution of select statement'+err.message);
+            res.status(500).send(err.message)
+          } else {
+          //console.log('db response is ready '+result.rows);
+
+          res.json(result.rows);
+        }
+        doRelease(connection);
+      });
+
+
+    });
+
+
+  };
