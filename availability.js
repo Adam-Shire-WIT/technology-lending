@@ -2,7 +2,6 @@ var oracledb = require('oracledb');
 var dbConfig = require('./dbconfig.js');
 var cors = require('cors')
 var express = require('express');
-require('dotenv').config()
 var app = express();
 
 app.use(cors());
@@ -19,16 +18,16 @@ console.log(`Server running, Express is listening on port ${PORT}...`);
 
 
 
-//return count items that are currently charged out
+//get item status from items in req.body.itemIDs
 app.post('/item', function (req, res) {
 
   var itemIDs = req.body.itemIDs;
 
 
-  var sql = `SELECT ITEM_ID AS ITEMID, COUNT(CIRC_TRANSACTION_ID) AS STATUS
-                        FROM CIRC_TRANSACTIONS
-                        WHERE CIRC_TRANSACTIONS.ITEM_ID IN (${itemIDs})
-                        GROUP BY ITEM_ID`;
+  var sql = `SELECT CIRC_TRANSACTIONS.ITEM_ID AS ITEM_ID, Count(CIRC_TRANSACTIONS.CIRC_TRANSACTION_ID) AS STATUS
+FROM CIRC_TRANSACTIONS RIGHT JOIN ITEM ON CIRC_TRANSACTIONS.ITEM_ID = ITEM.ITEM_ID
+WHERE ITEM.ITEM_ID In (${itemIDs})
+GROUP BY CIRC_TRANSACTIONS.ITEM_ID`;
 
   getResults(req, res, sql);
 
