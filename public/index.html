@@ -4,7 +4,12 @@
     src="https://code.jquery.com/jquery-3.3.1.js"
     integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
     crossorigin="anonymous"></script>
-    <script src="js/getavailability.js" defer></script>
+    <script src="js/getavailability.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+    getItemStatusFromMfhdIds();
+  });
+</script>
 
 
 </head>
