@@ -7,20 +7,61 @@
     <script src="js/getavailability.js"></script>
     <script>
     document.addEventListener("DOMContentLoaded", function(event) {
-    getItemStatusFromMfhdIds();
+
+      	var mfhdIds = $("[mfhd_id]").map(function() {
+      		                                      return $(this).attr("mfhd_id")
+      	                                        }).get();
+      	console.log("element IDs: " + mfhdIds);
+      	getItemStatusFromMfhdIds(mfhdIds);
+
   });
 </script>
-
+<style>
+ div[mfhd_id] li {
+   font-weight: bold;
+ }
+</style>
 
 </head>
 <body>
-  <h1> hello world!</h1>
-  <div class="availability" mfhd_id="2965423" >digital camera</div>
-
-<div id="87234"> </div>
-items
-<div class="availability" item_id="1560451" >item</div>
-<div class="availability" item_id="1560452" >item</div>
+  <div mfhd_id="3042036">Nikkor 85mm lens </div>
+  <div mfhd_id="3063586">3D printing pen. </div>
+  <div mfhd_id="2896431">Wireless keyboard </div>
+  <div mfhd_id="2820246">DLP Texas Instraments LED wireless pocket projector. </div>
+  <div mfhd_id="2820355">Seek thermal camera. </div>
+  <div mfhd_id="2818170">Sony FDR-AX100 4K camcorder basic kit. </div>
+  <div mfhd_id="2964742">Molecular model set. </div>
+  <div mfhd_id="3042037">Nikon D-3300 18-55 VR II camera kit. </div>
+  <div mfhd_id="3013686">MOVO LV4 lavalier microphone kit </div>
+  <div mfhd_id="2896428">SCIO pocket molecular sensor </div>
+  <div mfhd_id="2896434">Raspberry Pi kit </div>
+  <div mfhd_id="2823008">LittleBits Cloudbit starter kit. </div>
+  <div mfhd_id="2823493">Ricoh Theta S camera. </div>
+  <div mfhd_id="2965423">Wacom Intuos pen tablet. </div>
+  <div mfhd_id="3068279">Zoom H4n Pro Handy Recorder. </div>
+  <div mfhd_id="2823489">Selfie stick. </div>
+  <div mfhd_id="2904094">LittleBits : KORG synth kit. </div>
+  <div mfhd_id="3042031">Tokina 11-16mm lens </div>
+  <div mfhd_id="3042035">Nikkor 70-300mm lens </div>
+  <div mfhd_id="2794988">GoPro HERO4 Black kit. </div>
+  <div mfhd_id="2822491">Davis & Sanford Provista 7518B tripod. </div>
+  <div mfhd_id="2818160">Sony A6300 digital camera kit. </div>
+  <div mfhd_id="2823020">Arduino starter kit. </div>
+  <div mfhd_id="2903920">LittleBits electronics workshop kit. </div>
+  <div mfhd_id="2798734">InFocus IN313HDa HD DLP Projector. </div>
+  <div mfhd_id="3042033">Nikkor 10.5mm lens </div>
+  <div mfhd_id="3042024">GoPro HERO5 Black kit. </div>
+  <div mfhd_id="3067842">Pyle smart projector </div>
+  <div mfhd_id="2823013">LittleBits Arduino coding kit. </div>
+  <div mfhd_id="2904460">Muse : the brain sensing headband. </div>
+  <div mfhd_id="3042055">Magnus video tripod. </div>
+  <div mfhd_id="3013685">Sony stereo microphone. </div>
+  <div mfhd_id="2818180">Nikon D-3300 DSLR camera kit. </div>
+  <div mfhd_id="2794996">GoPro HERO4 Silver kit. </div>
+  <div mfhd_id="3067840">Yeti SB microphone </div>
+  <div mfhd_id="2820343">Structure Sensor Kit (3-D Scanner) </div>
+  <div mfhd_id="2820351">Gesture Control Armband. </div>
+  <div mfhd_id="2801282">Insta360 4K Video Camera kit. </div>
 
 
 </body>
