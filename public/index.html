@@ -4,27 +4,103 @@
     src="https://code.jquery.com/jquery-3.3.1.js"
     integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
     crossorigin="anonymous"></script>
-    <script src="js/getavailability.js"></script>
+
     <script>
-    document.addEventListener("DOMContentLoaded", function(event) {
+
+    function getTechLendingStatus() {
+     return new Promise(function(resolve, reject){
+       $.get('/wittech') //send array of mfhds to our post route for mfhds
+       .done(function(data) { // take the response from the API and update the UI
+     				resolve(data);
+        })
+     	.fail(function() {
+        	reject("an error occured");
+     	});
+     });
+
+    }
+
+
+
+    function getItemStatusFromMfhdIds(mfhdIds) {
+     return new Promise(function(resolve, reject){
+       $.post('/mfhd', {mfhdIDs: mfhdIds }) //send array of mfhds to our post route for mfhds
+       .done(function(data) { // take the response from the API and update the UI
+     			resolve(data);
+        })
+     	.fail(function() {
+        	reject("an error occured");
+     	});
+     });
+
+    }
+
+    function displayItemStatus(data) {
+      $.each(data, function (index, item) {
+        odd = index % 2;
+        dueDate = new Date(item.CURRENT_DUE_DATE);
+        var status = item.STATUS == 0 ? "Available" : `Due on ${dueDate}`;
+        $('<tr class=>').append($('<td class="title">').text(item.TITLE),
+        $('<td class="status">').text(status)
+      ).appendTo('#techlendingstatus tbody');
+
+    });
+    }
+
+    function updateItemStatus(data) { // update the UI with item availability
+    	console.log("updateItemStatus:")
+    	console.log(data);
+    	$.each(data, function (index, item) {
+    		console.log(item);
+    		var status = item.STATUS == 1 ? "Checked Out" : "Available";
+    		$('[mfhd_id="'+item.MFHD_ID+'"]').append(`<li>itemID: ${index} : status ${status}</li>`);
+    	});
+    }
+
+    //wait until DOM content loads, then grab the mfhdIds
+    $(function() {
 
       	var mfhdIds = $("[mfhd_id]").map(function() {
-      		                                      return $(this).attr("mfhd_id")
-      	                                        }).get();
-      	console.log("element IDs: " + mfhdIds);
-      	getItemStatusFromMfhdIds(mfhdIds);
+      	   return $(this).attr("mfhd_id")
+         })
+         .get();
+         getTechLendingStatus().then(function(result){
+         console.log("tech lending status", result);
+         displayItemStatus(result);
+        });
+         //getItemStatusFromMfhdIds(mfhdIds).then(function(result){
+           //updateItemStatus(result);
+          // })
+           //.catch(function() {
+           // An error occurred
+         //});
 
-  });
+
+
+    }); //DOMContentLoaded
+
+
+
 </script>
 <style>
  div[mfhd_id] li {
    font-weight: bold;
  }
+ #techlendingstatus tr:nth-child(even) {background: #CCC}
+#techlendingstatus tr:nth-child(odd) {background: #FFF}
 </style>
 
 </head>
 <body>
-  <div mfhd_id="3042036">Nikkor 85mm lens </div>
+  <table id="techlendingstatus">
+    <thead>
+    <th>Item</th>
+    <th>Status</th>
+  </thead>
+  <tbody >
+  </tbody>
+  </table>
+<!--  <div mfhd_id="3042036">Nikkor 85mm lens </div>
   <div mfhd_id="3063586">3D printing pen. </div>
   <div mfhd_id="2896431">Wireless keyboard </div>
   <div mfhd_id="2820246">DLP Texas Instraments LED wireless pocket projector. </div>
@@ -61,7 +137,7 @@
   <div mfhd_id="3067840">Yeti SB microphone </div>
   <div mfhd_id="2820343">Structure Sensor Kit (3-D Scanner) </div>
   <div mfhd_id="2820351">Gesture Control Armband. </div>
-  <div mfhd_id="2801282">Insta360 4K Video Camera kit. </div>
+  <div mfhd_id="2801282">Insta360 4K Video Camera kit. </div> -->
 
 
 </body>

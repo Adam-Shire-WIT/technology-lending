@@ -16,6 +16,14 @@ console.log(`Server running, Express is listening on port ${PORT}...`);
 });
 
 
+app.get('/wittech', function (req, res) {
+  var sql = `SELECT BIB_TEXT.TITLE, MFHD_MASTER.MFHD_ID, MFHD_ITEM.ITEM_ID, Count(CIRC_TRANSACTIONS.CIRC_TRANSACTION_ID) AS STATUS, CIRC_TRANSACTIONS.CURRENT_DUE_DATE
+FROM ((((MFHD_ITEM INNER JOIN MFHD_MASTER ON MFHD_ITEM.MFHD_ID = MFHD_MASTER.MFHD_ID) LEFT JOIN CIRC_TRANSACTIONS ON MFHD_ITEM.ITEM_ID = CIRC_TRANSACTIONS.ITEM_ID) INNER JOIN LOCATION ON MFHD_MASTER.LOCATION_ID = LOCATION.LOCATION_ID) INNER JOIN BIB_MFHD ON MFHD_MASTER.MFHD_ID = BIB_MFHD.MFHD_ID) INNER JOIN BIB_TEXT ON BIB_MFHD.BIB_ID = BIB_TEXT.BIB_ID
+WHERE (((LOCATION.LOCATION_CODE)='WITTECH'))
+GROUP BY BIB_TEXT.TITLE, MFHD_MASTER.MFHD_ID, MFHD_ITEM.ITEM_ID, CIRC_TRANSACTIONS.CURRENT_DUE_DATE
+ORDER BY BIB_TEXT.TITLE`;
+getResults(req, res, sql);
+})
 
 
 //get item status from items in req.body.itemIDs
@@ -254,12 +262,12 @@ function getResults(req, res, sql) {
          {outFormat: oracledb.OBJECT},  // Return the result as Object
          function (err, result) {
           if (err) {
-            console.log('Error in execution of select statement'+err.message);
+            console.log('Error in execution of select statement', err.message);
             res.status(500).send(err.message)
           } else {
           //console.log('db response is ready '+result.rows);
-
-          res.json(result.rows);
+          console.log(result.rows);
+          res.send(result.rows);
         }
         doRelease(connection);
       });
